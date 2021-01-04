@@ -53,14 +53,6 @@ allprojects {
   }
 }
 
-<dependencies>
-    <dependency>
-        <groupId>com.github.brunosc.fetcher</groupId>
-        <artifactId>youtube-video-fetcher</artifactId>
-        <version>0.0.1</version>
-    </dependency>
-</dependencies>
-
 dependencies {
   implementation 'com.github.brunosc.fetcher:youtube-video-fetcher:0.0.1'
 }
