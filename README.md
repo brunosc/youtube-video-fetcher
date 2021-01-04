@@ -1,12 +1,10 @@
 # youtube-video-fetcher
 
----
+[![](https://jitpack.io/v/brunosc/youtube-video-fetcher.svg)](https://jitpack.io/#brunosc/youtube-video-fetcher)
 
 A simple way to fetch the latest videos from a YouTube channel using Java.
 
 ## How to Use It
-
----
 
 ``` bash
 
@@ -24,9 +22,51 @@ List<VideoDetails> list = fetcher.fetchByChannelId("your_channel_id", 20);
 
 ```
 
-## Getting the Client Secret JSON
+## Dependency
 
----
+### Maven
+
+``` bash
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+
+<dependencies>
+    <dependency>
+        <groupId>com.github.brunosc.fetcher</groupId>
+        <artifactId>youtube-video-fetcher</artifactId>
+        <version>0.0.1</version>
+    </dependency>
+</dependencies>
+```
+
+### Gradle
+
+``` bash
+allprojects {
+  repositories {
+    ...
+    maven { url 'https://jitpack.io' }
+  }
+}
+
+<dependencies>
+    <dependency>
+        <groupId>com.github.brunosc.fetcher</groupId>
+        <artifactId>youtube-video-fetcher</artifactId>
+        <version>0.0.1</version>
+    </dependency>
+</dependencies>
+
+dependencies {
+  implementation 'com.github.brunosc.fetcher:youtube-video-fetcher:0.0.1'
+}
+```
+
+## Getting the Client Secret JSON
 
 Go to [Credentials](https://console.developers.google.com/apis/credentials) webpage.
 <br>There will be a table called **OAuth 2.0 Client IDs**
@@ -34,8 +74,6 @@ Go to [Credentials](https://console.developers.google.com/apis/credentials) webp
 <br>There it is!
 
 ## Getting the Playlist ID
-
----
 
 You have to call the channels API:
 
@@ -73,8 +111,6 @@ The playlist id is: `response.items.get(0).contentDetails.uploads`
 ```
 
 ## Domain
-
----
 
 ``` bash
 public class VideoDetails {
