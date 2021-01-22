@@ -3,22 +3,32 @@ package com.github.brunosc.fetcher.domain;
 import com.google.api.services.youtube.model.Thumbnail;
 import com.google.api.services.youtube.model.ThumbnailDetails;
 
-import java.util.Optional;
+import static java.util.Optional.ofNullable;
 
 public class VideoThumbnails {
 
-    private final ThumbnailItem defaultThumbnail;
-    private final ThumbnailItem high;
-    private final ThumbnailItem maxres;
-    private final ThumbnailItem medium;
-    private final ThumbnailItem standard;
+    private ThumbnailItem defaultThumbnail;
+    private ThumbnailItem high;
+    private ThumbnailItem maxres;
+    private ThumbnailItem medium;
+    private ThumbnailItem standard;
+
+    public VideoThumbnails(){}
+
+    public VideoThumbnails(ThumbnailItem defaultThumbnail, ThumbnailItem high, ThumbnailItem maxres, ThumbnailItem medium, ThumbnailItem standard) {
+        this.defaultThumbnail = defaultThumbnail;
+        this.high = high;
+        this.maxres = maxres;
+        this.medium = medium;
+        this.standard = standard;
+    }
 
     public VideoThumbnails(ThumbnailDetails thumbnailDetails) {
-        this.defaultThumbnail = Optional.of(thumbnailDetails.getDefault()).map(ThumbnailItem::new).orElse(null);
-        this.high = Optional.of(thumbnailDetails.getHigh()).map(ThumbnailItem::new).orElse(null);
-        this.maxres = Optional.of(thumbnailDetails.getMaxres()).map(ThumbnailItem::new).orElse(null);
-        this.medium = Optional.of(thumbnailDetails.getMedium()).map(ThumbnailItem::new).orElse(null);
-        this.standard = Optional.of(thumbnailDetails.getStandard()).map(ThumbnailItem::new).orElse(null);
+        this.defaultThumbnail = ofNullable(thumbnailDetails.getDefault()).map(ThumbnailItem::new).orElse(null);
+        this.high = ofNullable(thumbnailDetails.getHigh()).map(ThumbnailItem::new).orElse(null);
+        this.maxres = ofNullable(thumbnailDetails.getMaxres()).map(ThumbnailItem::new).orElse(null);
+        this.medium = ofNullable(thumbnailDetails.getMedium()).map(ThumbnailItem::new).orElse(null);
+        this.standard = ofNullable(thumbnailDetails.getStandard()).map(ThumbnailItem::new).orElse(null);
     }
 
     public ThumbnailItem getDefaultThumbnail() {
@@ -42,9 +52,19 @@ public class VideoThumbnails {
     }
 
     public static class ThumbnailItem {
-        private final int height;
-        private final int width;
-        private final String url;
+        private int height;
+        private int width;
+        private String url;
+
+        public ThumbnailItem() {
+
+        }
+
+        public ThumbnailItem(int height, int width, String url) {
+            this.height = height;
+            this.width = width;
+            this.url = url;
+        }
 
         public ThumbnailItem(Thumbnail thumbnail) {
             this.height = Math.toIntExact(thumbnail.getHeight());
