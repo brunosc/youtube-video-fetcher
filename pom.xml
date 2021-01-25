@@ -6,7 +6,7 @@
 
     <groupId>com.github.brunosc.fetcher</groupId>
     <artifactId>youtube-video-fetcher</artifactId>
-    <version>0.0.4</version>
+    <version>0.0.5</version>
 
     <properties>
         <google.api.client.version>1.31.1</google.api.client.version>

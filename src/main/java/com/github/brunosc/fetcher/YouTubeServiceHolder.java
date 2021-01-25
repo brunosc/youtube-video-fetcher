@@ -44,8 +44,8 @@ final class YouTubeServiceHolder {
     private final int localServerPort;
 
     private YouTubeServiceHolder(final InputStream clientSecretsIn, final int localServerPort) throws GeneralSecurityException, IOException {
-        final var httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-        final var credential = authorize(clientSecretsIn, httpTransport);
+        NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+        Credential credential = authorize(clientSecretsIn, httpTransport);
 
         this.service = new YouTube.Builder(httpTransport, JSON_FACTORY, credential)
                 .setApplicationName(APPLICATION_NAME)
@@ -71,10 +71,10 @@ final class YouTubeServiceHolder {
     private Credential authorize(final InputStream clientSecretsIn, final NetHttpTransport httpTransport) throws IOException {
 
         // Load client secrets.
-        final var clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(clientSecretsIn));
+        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(clientSecretsIn));
 
         // Build flow and trigger user authorization request.
-        final var authFlow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY, clientSecrets, SCOPES)
+        GoogleAuthorizationCodeFlow authFlow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY, clientSecrets, SCOPES)
                 .setCredentialDataStore(buildDataStore())
                 .build();
 

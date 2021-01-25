@@ -1,13 +1,17 @@
 package com.github.brunosc.fetcher;
 
 import com.github.brunosc.fetcher.domain.VideoDetails;
+import com.google.api.services.youtube.YouTube;
+import com.google.api.services.youtube.model.Channel;
+import com.google.api.services.youtube.model.ChannelListResponse;
+import com.google.api.services.youtube.model.PlaylistItemListResponse;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.util.List;
 
-import static java.util.stream.Collectors.toUnmodifiableList;
+import static java.util.stream.Collectors.toList;
 
 public class YouTubeFetcher {
 
@@ -23,11 +27,11 @@ public class YouTubeFetcher {
     }
 
     public List<VideoDetails> fetchByChannelId(String channelId, Long maxResults) throws IOException {
-        final var request = youTubeService.getService().channels().list("contentDetails");
-        final var response = request.setId(channelId).execute();
+        YouTube.Channels.List request = youTubeService.getService().channels().list("contentDetails");
+        ChannelListResponse response = request.setId(channelId).execute();
 
-        final var channel = response.getItems().get(0);
-        final var uploadId = channel.getContentDetails().getRelatedPlaylists().getUploads();
+        Channel channel = response.getItems().get(0);
+        String uploadId = channel.getContentDetails().getRelatedPlaylists().getUploads();
 
         return fetchByPlaylistId(uploadId, maxResults);
     }
@@ -37,14 +41,14 @@ public class YouTubeFetcher {
     }
 
     public List<VideoDetails> fetchByPlaylistId(String playlistId, Long maxResults) throws IOException {
-        final var playlistRequest = youTubeService.getService().playlistItems().list("snippet");
-        final var playlistResponse = playlistRequest.setPlaylistId(playlistId).setMaxResults(maxResults).execute();
+        YouTube.PlaylistItems.List playlistRequest = youTubeService.getService().playlistItems().list("snippet");
+        PlaylistItemListResponse playlistResponse = playlistRequest.setPlaylistId(playlistId).setMaxResults(maxResults).execute();
 
         return playlistResponse
                 .getItems()
                 .stream()
                 .map(VideoDetails::new)
-                .collect(toUnmodifiableList());
+                .collect(toList());
     }
 
 }
