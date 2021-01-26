@@ -44,13 +44,13 @@ final class YouTubeServiceHolder {
     private final int localServerPort;
 
     private YouTubeServiceHolder(final InputStream clientSecretsIn, final int localServerPort) throws GeneralSecurityException, IOException {
+        this.localServerPort = localServerPort;
+
         NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
         Credential credential = authorize(clientSecretsIn, httpTransport);
-
         this.service = new YouTube.Builder(httpTransport, JSON_FACTORY, credential)
                 .setApplicationName(APPLICATION_NAME)
                 .build();
-        this.localServerPort = localServerPort;
     }
 
     YouTube getService() {
