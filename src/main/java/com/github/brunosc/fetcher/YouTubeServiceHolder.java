@@ -41,10 +41,10 @@ final class YouTubeServiceHolder {
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
     private final YouTube service;
-    private final int localServerPort;
+    private final String localServerHost;
 
-    private YouTubeServiceHolder(final InputStream clientSecretsIn, final int localServerPort) throws GeneralSecurityException, IOException {
-        this.localServerPort = localServerPort;
+    private YouTubeServiceHolder(final InputStream clientSecretsIn, final String localServerHost) throws GeneralSecurityException, IOException {
+        this.localServerHost = localServerHost;
 
         NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
         Credential credential = authorize(clientSecretsIn, httpTransport);
@@ -57,13 +57,9 @@ final class YouTubeServiceHolder {
         return this.service;
     }
 
-    static YouTubeServiceHolder getInstance(final InputStream clientSecretsIn) throws GeneralSecurityException, IOException {
-        return getInstance(clientSecretsIn, DEFAULT_LOCAL_SERVER_PORT);
-    }
-
-    static YouTubeServiceHolder getInstance(final InputStream clientSecretsIn, final int localServerPort) throws GeneralSecurityException, IOException {
+    static YouTubeServiceHolder getInstance(final InputStream clientSecretsIn, final String localServerHost) throws GeneralSecurityException, IOException {
         if (INSTANCE == null) {
-            INSTANCE = new YouTubeServiceHolder(clientSecretsIn, localServerPort);
+            INSTANCE = new YouTubeServiceHolder(clientSecretsIn, localServerHost);
         }
         return INSTANCE;
     }
@@ -79,7 +75,10 @@ final class YouTubeServiceHolder {
                 .build();
 
         // Build the local server and bind it to port 8095
-        LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(localServerPort).build();
+        LocalServerReceiver localReceiver = new LocalServerReceiver.Builder()
+                .setPort(DEFAULT_LOCAL_SERVER_PORT)
+                .setHost(this.localServerHost)
+                .build();
 
         return new AuthorizationCodeInstalledApp(authFlow, localReceiver).authorize("user");
     }

@@ -18,8 +18,8 @@ public class YouTubeFetcher {
     private static final Long DEFAULT_MAX_RESULTS = 5L;
     private final YouTubeServiceHolder youTubeService;
 
-    public YouTubeFetcher(InputStream clientSecretsIn) throws GeneralSecurityException, IOException {
-        this.youTubeService = YouTubeServiceHolder.getInstance(clientSecretsIn);
+    public YouTubeFetcher(InputStream clientSecretsIn, String localServerHost) throws GeneralSecurityException, IOException {
+        this.youTubeService = YouTubeServiceHolder.getInstance(clientSecretsIn, localServerHost);
     }
 
     public List<VideoDetails> fetchByChannelId(String channelId) throws IOException {
