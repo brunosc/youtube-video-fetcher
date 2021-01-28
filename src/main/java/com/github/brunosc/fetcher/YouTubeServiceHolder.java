@@ -1,5 +1,6 @@
 package com.github.brunosc.fetcher;
 
+import com.github.brunosc.fetcher.domain.YouTubeFetcherParams;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.StoredCredential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -11,7 +12,6 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.DataStore;
-import com.google.api.client.util.store.DataStoreFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.youtube.YouTube;
 
@@ -26,7 +26,6 @@ import static java.util.Collections.singletonList;
 
 final class YouTubeServiceHolder {
 
-    private static final int DEFAULT_LOCAL_SERVER_PORT = 8095;
     private static final String CREDENTIALS_DIRECTORY = ".oauth-credentials";
     private static final String DATASTORE_NAME = "credentialstore";
 
@@ -41,13 +40,13 @@ final class YouTubeServiceHolder {
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
     private final YouTube service;
-    private final String localServerHost;
+    private final YouTubeFetcherParams params;
 
-    private YouTubeServiceHolder(final InputStream clientSecretsIn, final String localServerHost) throws GeneralSecurityException, IOException {
-        this.localServerHost = localServerHost;
+    private YouTubeServiceHolder(final YouTubeFetcherParams params) throws GeneralSecurityException, IOException {
+        this.params = params;
 
         NetHttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-        Credential credential = authorize(clientSecretsIn, httpTransport);
+        Credential credential = authorize(params.getClientSecretsIn(), httpTransport);
         this.service = new YouTube.Builder(httpTransport, JSON_FACTORY, credential)
                 .setApplicationName(APPLICATION_NAME)
                 .build();
@@ -57,15 +56,14 @@ final class YouTubeServiceHolder {
         return this.service;
     }
 
-    static YouTubeServiceHolder getInstance(final InputStream clientSecretsIn, final String localServerHost) throws GeneralSecurityException, IOException {
+    static YouTubeServiceHolder getInstance(final YouTubeFetcherParams localServerParams) throws GeneralSecurityException, IOException {
         if (INSTANCE == null) {
-            INSTANCE = new YouTubeServiceHolder(clientSecretsIn, localServerHost);
+            INSTANCE = new YouTubeServiceHolder(localServerParams);
         }
         return INSTANCE;
     }
 
     private Credential authorize(final InputStream clientSecretsIn, final NetHttpTransport httpTransport) throws IOException {
-
         // Load client secrets.
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(clientSecretsIn));
 
@@ -74,13 +72,14 @@ final class YouTubeServiceHolder {
                 .setCredentialDataStore(buildDataStore())
                 .build();
 
-        // Build the local server and bind it to port 8095
-        LocalServerReceiver localReceiver = new LocalServerReceiver.Builder()
-                .setPort(DEFAULT_LOCAL_SERVER_PORT)
-                .setHost(this.localServerHost)
-                .build();
+        return new AuthorizationCodeInstalledApp(authFlow, buildLocalReceiver()).authorize("user");
+    }
 
-        return new AuthorizationCodeInstalledApp(authFlow, localReceiver).authorize("user");
+    private LocalServerReceiver buildLocalReceiver() {
+        return new LocalServerReceiver.Builder()
+                .setPort(params.getPort())
+                .setHost(params.getHost())
+                .build();
     }
 
     private DataStore<StoredCredential> buildDataStore() throws IOException {

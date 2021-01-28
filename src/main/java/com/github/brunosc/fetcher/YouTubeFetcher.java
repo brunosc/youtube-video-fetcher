@@ -1,5 +1,6 @@
 package com.github.brunosc.fetcher;
 
+import com.github.brunosc.fetcher.domain.YouTubeFetcherParams;
 import com.github.brunosc.fetcher.domain.VideoDetails;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.Channel;
@@ -7,7 +8,6 @@ import com.google.api.services.youtube.model.ChannelListResponse;
 import com.google.api.services.youtube.model.PlaylistItemListResponse;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.util.List;
 
@@ -18,8 +18,8 @@ public class YouTubeFetcher {
     private static final Long DEFAULT_MAX_RESULTS = 5L;
     private final YouTubeServiceHolder youTubeService;
 
-    public YouTubeFetcher(InputStream clientSecretsIn, String localServerHost) throws GeneralSecurityException, IOException {
-        this.youTubeService = YouTubeServiceHolder.getInstance(clientSecretsIn, localServerHost);
+    public YouTubeFetcher(YouTubeFetcherParams params) throws GeneralSecurityException, IOException {
+        this.youTubeService = YouTubeServiceHolder.getInstance(params);
     }
 
     public List<VideoDetails> fetchByChannelId(String channelId) throws IOException {

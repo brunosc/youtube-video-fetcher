@@ -9,7 +9,20 @@ A simple way to fetch the latest videos from a YouTube channel using Java.
 ``` bash
 
 InputStream clientSecretsIn = MyApp.class.getResourceAsStream("your_json_path_in_resources_folder");
-YouTubeFetcher fetcher = new YouTubeFetcher(clientSecretsIn);
+
+// Customize the host and port for the callback URL
+YouTubeFetcherParams params = new YouTubeFetcherParams
+                .Builder(clientSecretsIn)
+                .withHost("my.host.com")
+                .withPort(8095)
+                .build();
+                
+// Or localhost and random port                
+YouTubeFetcherParams params = new YouTubeFetcherParams
+                .Builder(clientSecretsIn)
+                .build();                
+
+YouTubeFetcher fetcher = new YouTubeFetcher(params);
 
 // By playlist id
 List<VideoDetails> list = fetcher.fetchByPlaylistId("your_playlist_id");
@@ -36,9 +49,9 @@ List<VideoDetails> list = fetcher.fetchByChannelId("your_channel_id", 20);
 
 <dependencies>
     <dependency>
-        <groupId>com.github.brunosc.fetcher</groupId>
+        <groupId>com.github.brunosc</groupId>
         <artifactId>youtube-video-fetcher</artifactId>
-        <version>0.0.1</version>
+        <version>0.0.9</version>
     </dependency>
 </dependencies>
 ```
@@ -54,7 +67,7 @@ allprojects {
 }
 
 dependencies {
-  implementation 'com.github.brunosc.fetcher:youtube-video-fetcher:0.0.1'
+  implementation 'com.github.brunosc:youtube-video-fetcher:0.0.9'
 }
 ```
 
