@@ -64,15 +64,21 @@ final class YouTubeServiceHolder {
     }
 
     private Credential authorize(final InputStream clientSecretsIn, final NetHttpTransport httpTransport) throws IOException {
+        // Build flow and trigger user authorization request.
+        GoogleAuthorizationCodeFlow authFlow = buildAuthFlow(clientSecretsIn, httpTransport);
+
+        return new AuthorizationCodeInstalledApp(authFlow, buildLocalReceiver()).authorize("user");
+    }
+
+    private GoogleAuthorizationCodeFlow buildAuthFlow(final InputStream clientSecretsIn, final NetHttpTransport httpTransport) throws IOException {
         // Load client secrets.
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(clientSecretsIn));
 
-        // Build flow and trigger user authorization request.
-        GoogleAuthorizationCodeFlow authFlow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY, clientSecrets, SCOPES)
+        return new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY, clientSecrets, SCOPES)
+                .setAccessType("offline")
+                .setApprovalPrompt("force")
                 .setCredentialDataStore(buildDataStore())
                 .build();
-
-        return new AuthorizationCodeInstalledApp(authFlow, buildLocalReceiver()).authorize("user");
     }
 
     private LocalServerReceiver buildLocalReceiver() {

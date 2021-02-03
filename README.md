@@ -51,7 +51,7 @@ List<VideoDetails> list = fetcher.fetchByChannelId("your_channel_id", 20);
     <dependency>
         <groupId>com.github.brunosc</groupId>
         <artifactId>youtube-video-fetcher</artifactId>
-        <version>0.0.9</version>
+        <version>0.0.11</version>
     </dependency>
 </dependencies>
 ```
@@ -67,7 +67,7 @@ allprojects {
 }
 
 dependencies {
-  implementation 'com.github.brunosc:youtube-video-fetcher:0.0.9'
+  implementation 'com.github.brunosc:youtube-video-fetcher:0.0.11'
 }
 ```
 
