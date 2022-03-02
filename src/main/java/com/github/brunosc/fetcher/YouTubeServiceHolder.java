@@ -14,13 +14,13 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.DataStore;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.youtube.YouTube;
+import com.google.api.services.youtube.YouTubeScopes;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
-import java.util.Collection;
 
 import static java.util.Collections.singletonList;
 
@@ -30,11 +30,6 @@ final class YouTubeServiceHolder {
     private static final String DATASTORE_NAME = "credentialstore";
 
     private static final String APPLICATION_NAME = "YouTube Fetcher";
-    private static final Collection<String> SCOPES = singletonList("https://www.googleapis.com/auth/youtube " +
-            "https://www.googleapis.com/auth/youtube.force-ssl " +
-            "https://www.googleapis.com/auth/youtube.readonly " +
-            "https://www.googleapis.com/auth/youtubepartner " +
-            "https://www.googleapis.com/auth/youtubepartner-channel-audit");
 
     private static YouTubeServiceHolder INSTANCE;
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
@@ -74,9 +69,8 @@ final class YouTubeServiceHolder {
         // Load client secrets.
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(clientSecretsIn));
 
-        return new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY, clientSecrets, SCOPES)
+        return new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY, clientSecrets, singletonList(YouTubeScopes.YOUTUBE_READONLY))
                 .setAccessType("offline")
-                .setApprovalPrompt("force")
                 .setCredentialDataStore(buildDataStore())
                 .build();
     }

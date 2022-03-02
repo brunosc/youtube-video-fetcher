@@ -6,7 +6,7 @@
 
     <groupId>com.github.brunosc.fetcher</groupId>
     <artifactId>youtube-video-fetcher</artifactId>
-    <version>0.0.11</version>
+    <version>0.0.12</version>
 
     <properties>
         <google.api.client.version>1.31.1</google.api.client.version>
@@ -29,6 +29,11 @@
             <groupId>com.google.apis</groupId>
             <artifactId>google-api-services-youtube</artifactId>
             <version>${google.api.services.youtube.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.auth</groupId>
+            <artifactId>google-auth-library-oauth2-http</artifactId>
+            <version>1.2.2</version>
         </dependency>
     </dependencies>
 
