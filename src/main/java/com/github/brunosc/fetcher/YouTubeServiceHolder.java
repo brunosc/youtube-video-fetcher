@@ -31,7 +31,6 @@ final class YouTubeServiceHolder {
 
     private static final String APPLICATION_NAME = "YouTube Fetcher";
 
-    private static YouTubeServiceHolder INSTANCE;
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
     private final YouTube service;
@@ -52,10 +51,7 @@ final class YouTubeServiceHolder {
     }
 
     static YouTubeServiceHolder getInstance(final YouTubeFetcherParams localServerParams) throws GeneralSecurityException, IOException {
-        if (INSTANCE == null) {
-            INSTANCE = new YouTubeServiceHolder(localServerParams);
-        }
-        return INSTANCE;
+        return new YouTubeServiceHolder(localServerParams);
     }
 
     private Credential authorize(final InputStream clientSecretsIn, final NetHttpTransport httpTransport) throws IOException {
@@ -71,6 +67,7 @@ final class YouTubeServiceHolder {
 
         return new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY, clientSecrets, singletonList(YouTubeScopes.YOUTUBE_READONLY))
                 .setAccessType("offline")
+                .setApprovalPrompt("force")
                 .setCredentialDataStore(buildDataStore())
                 .build();
     }
