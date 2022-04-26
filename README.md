@@ -2,7 +2,7 @@
 
 [![](https://jitpack.io/v/brunosc/youtube-video-fetcher.svg)](https://jitpack.io/#brunosc/youtube-video-fetcher)
 
-A simple way to fetch the latest videos from a YouTube channel using Java.
+A simple Java library to fetch the latest videos from a YouTube channel using a [service account](https://developers.google.com/identity/protocols/oauth2/service-account).
 
 ## How to Use It
 
@@ -10,17 +10,9 @@ A simple way to fetch the latest videos from a YouTube channel using Java.
 
 InputStream clientSecretsIn = MyApp.class.getResourceAsStream("your_json_path_in_resources_folder");
 
-// Customize the host and port for the callback URL
 YouTubeFetcherParams params = new YouTubeFetcherParams
                 .Builder(clientSecretsIn)
-                .withHost("my.host.com")
-                .withPort(8095)
                 .build();
-                
-// Or localhost and random port                
-YouTubeFetcherParams params = new YouTubeFetcherParams
-                .Builder(clientSecretsIn)
-                .build();                
 
 YouTubeFetcher fetcher = new YouTubeFetcher(params);
 
@@ -51,7 +43,7 @@ List<VideoDetails> list = fetcher.fetchByChannelId("your_channel_id", 20);
     <dependency>
         <groupId>com.github.brunosc</groupId>
         <artifactId>youtube-video-fetcher</artifactId>
-        <version>0.0.11</version>
+        <version>0.0.14</version>
     </dependency>
 </dependencies>
 ```
@@ -67,16 +59,13 @@ allprojects {
 }
 
 dependencies {
-  implementation 'com.github.brunosc:youtube-video-fetcher:0.0.11'
+  implementation 'com.github.brunosc:youtube-video-fetcher:0.0.14'
 }
 ```
 
 ## Getting the Client Secret JSON
 
-Go to [Credentials](https://console.developers.google.com/apis/credentials) webpage.
-<br>There will be a table called **OAuth 2.0 Client IDs**
-<br>Click on the Download icon at the last column
-<br>There it is!
+Go to [Service Account](https://developers.google.com/identity/protocols/oauth2/service-account#creatinganaccount) webpage and follow its instructions.
 
 ## Getting the Playlist ID
 
